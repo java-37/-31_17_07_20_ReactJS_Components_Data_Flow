@@ -1,26 +1,56 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Cards from './component/Cards';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+export default class extends React.Component{
+    state = {
+        products:getProducts()
+    }
+
+    incProd = (id) => {
+        const arr = [...this.state.products];
+        let index = arr.findIndex(p => p.id === id);
+        if(index >= 0){
+            const product = {...arr[index]};
+            product.count++;
+            arr[index] = product;
+            this.setState({...this.state, products: arr});
+        }
+    }
+
+    decProd = (id) => {
+        const arr = [...this.state.products];
+        let index = arr.findIndex(p => p.id === id);
+        if(index >= 0){
+            const product = {...arr[index]};
+            product.count--;
+            arr[index] = product;
+            this.setState({...this.state, products: arr});
+        }
+    }
+
+    render(){
+        return (
+            <div className='container'>
+                <h1>Our Products</h1>
+                <hr/>
+                <Cards 
+                products={this.state.products} 
+                onDecClickHandler={this.decProd}
+                onIncClickHandler={this.incProd}/>
+                <hr />
+                <button onClick={() => console.log(this.state.products)}>Send order</button>
+            </div>
+        );
+    }
 }
 
-export default App;
+function getProducts(){
+    return [
+        {id:'123',title:'Product 1', price:100,count:2},
+        {id:'321',title:'Product 2', price:50,count:4},
+        {id:'456',title:'Product 3', price:120,count:1},
+    ];
+}
+
